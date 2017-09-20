@@ -1,6 +1,6 @@
 import React from "react";
 import * as ReactDOM from "react-dom";
-import LittleExport from "./components/LittleExcel";
+import LittleExcel from "./components/LittleExcel";
 
 const containerEl = document.getElementById("app");
 
@@ -19,10 +19,25 @@ const data = [
     [   "Alice in Wonderland",	"Lewis Carroll",	"English",	"1865",	"100 million"   ]
 ];
 
+class MainApp extends React.Component {
+
+    renderLitleExcel() {
+        return (
+            <LittleExcel headers={headers} initialData={data} />
+        );
+    }
+
+    render() {
+        return (
+            <div className="app">
+                {this.renderLitleExcel()}
+            </div>
+        )
+    }
+
+}
+
 ReactDOM.render(
-    React.createElement(LittleExport, {
-        headers: headers,
-        initialData: data
-    }),
+    <MainApp/>,
     containerEl
 );
