@@ -1,4 +1,5 @@
-import * as React from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 /**
  * Komponent bezstanowy małego arkusza
@@ -12,10 +13,25 @@ class LittleExcel extends React.Component {
         super(props);
         this.state = {
             data: this.props.initialData
+        };
+
+        this.isNumber = this.isNumber.bind(this);
+    }
+
+    isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);;
+    }
+
+    getCellClassName(cell) {
+        if (this.isNumber(cell)) {
+            return "right-aligned";
+        } else {
+            return "";
         }
     }
 
     render() {
+        let _this = this;
         return (
             <table className="table">
                 <thead>
@@ -34,7 +50,7 @@ class LittleExcel extends React.Component {
                             <tr key={id}>
                             {
                                 row.map(function (cell, id) {
-                                    return <td key={id}>{cell}</td>
+                                    return <td className={_this.getCellClassName(cell)} key={id}>{cell}</td>
                                 })
                             }
                             </tr>
@@ -48,10 +64,10 @@ class LittleExcel extends React.Component {
 }
 
 LittleExcel.propTypes = {
-    headers: React.PropTypes.arrayOf(
-        React.PropTypes.string
+    headers: PropTypes.arrayOf(
+        PropTypes.string
     ),
-    data: React.PropTypes.array
+    data: PropTypes.array
 };
 
 export default LittleExcel;

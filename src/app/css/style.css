@@ -12,3 +12,7 @@ html, body {
     width: 70%;
     margin: 0 auto;
 }
+
+.right-aligned {
+    text-align: right;
+}
