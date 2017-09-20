@@ -15,11 +15,16 @@ class LittleExcel extends React.Component {
         this.state = {
             data: this.props.initialData,
             sortedBy: null,
-            sortedAscending: false
+            sortedAscending: false,
+            edit: null,
+            search: false
         };
 
         this.getCellClassName = this.getCellClassName.bind(this);
         this.sort = this.sort.bind(this);
+        this._showEditor = this._showEditor.bind(this);
+        this._save = this._save.bind(this);
+        this._renderSearch = this._renderSearch.bind(this);
     }
 
     getCellClassName(cell) {
@@ -42,7 +47,58 @@ class LittleExcel extends React.Component {
         });
     }
 
-    render() {
+    _showEditor(e) {
+        let row = e.target.dataset.row;
+        let cell = e.target.cellIndex;
+
+        this.setState({
+            edit: {
+                row: parseInt(row, 10),
+                cell: cell
+            }
+        });
+    }
+
+    _save(e) {
+        // Aby strona się nie przeładowywałą
+        e.preventDefault();
+
+        let input = e.target.firstChild;
+        let data = Array.from(this.state.data);
+
+        data[this.state.edit.row][this.state.edit.cell] = input.value;
+
+        this.setState({
+            edit: null,
+            data: data
+        });
+    }
+
+    _search(e) {
+        // TODO
+    }
+
+    _renderSearch() {
+        if (!this.state.search) {
+            return null;
+        }
+
+        return (
+            <tr onChange={this._search}>
+            {
+                this.props.headers.map(function (_ignore, id) {
+                    return React.DOM.td({key: id,},
+                        React.DOM.input({
+                            type: "text",
+                            'data-id': id
+                        }));
+                })
+            }
+            </tr>
+        );
+    }
+
+    _renderTable() {
         let _this = this;
         return (
             <table className="table">
@@ -58,14 +114,32 @@ class LittleExcel extends React.Component {
                 }
                 </tr>
                 </thead>
-                <tbody>
+                <tbody onDoubleClick={_this._showEditor}>
                 {
-                    this.state.data.map(function (row, id) {
+                    this.state.data.map(function (row, rowId) {
                         return (
-                            <tr key={id}>
+                            <tr key={rowId}>
                             {
-                                row.map(function (cell, id) {
-                                    return <td className={_this.getCellClassName(cell)} key={id}>{cell}</td>
+                                row.map(function (cell, cellId) {
+                                    let content = cell;
+                                    let currentlyEdit = _this.state.edit;
+
+                                    if (currentlyEdit && currentlyEdit.row === rowId && currentlyEdit.cell === cellId) {
+                                        content = React.DOM.form({
+                                            onSubmit: _this._save,
+                                        }, React.DOM.input({
+                                            type: "text",
+                                            defaultValue: content
+                                        }));
+                                    }
+
+                                    return React.DOM.td({
+                                        key: cellId,
+                                        'data-row': rowId,
+                                        className: _this.getCellClassName(cell)
+                                    }, content);
+
+                                    // return <td className={_this.getCellClassName(cell)} key={cellId}>{content}</td>
                                 })
                             }
                             </tr>
@@ -76,6 +150,22 @@ class LittleExcel extends React.Component {
             </table>
         );
     }
+
+    _renderToolbar() {
+        return (
+            <button className="toolbar" onClick={this._renderSearch}>Wyszukaj</button>
+        );
+    }
+
+    render() {
+        return (
+            <div>
+                {this._renderToolbar()}
+                {this._renderTable()}
+            </div>
+        );
+    }
+
 }
 
 LittleExcel.propTypes = {
