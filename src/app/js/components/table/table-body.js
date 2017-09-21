@@ -82,6 +82,7 @@ class TableBody extends React.Component {
                                             onSubmit: _this._save,
                                         }, React.DOM.input({
                                             type: "text",
+                                            className: "form-control",
                                             defaultValue: content
                                         }));
                                     }
