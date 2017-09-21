@@ -18,11 +18,11 @@ class LittleExcel extends React.Component {
             search: false
         };
 
-        this._renderSearch = this._renderSearch.bind(this);
-    }
+        this._preSearchData = null;
 
-    _search(e) {
-        // TODO
+        this._search = this._search.bind(this);
+        this._toggleSearch = this._toggleSearch.bind(this);
+        this._renderSearch = this._renderSearch.bind(this);
     }
 
     /**
@@ -44,6 +44,25 @@ class LittleExcel extends React.Component {
         });
     }
 
+    _search(e) {
+        let searchText = e.target.value.toLowerCase();
+
+        if (!searchText) {
+            this.setState({
+                data: this._preSearchData
+            });
+        }
+
+        let columnId = e.target.dataset.id;
+        let filteredData = this._preSearchData.filter(function (row) {
+            return row[columnId].toString().toLowerCase().indexOf(searchText) > -1;
+        });
+
+        this.setState({
+            data: filteredData
+        });
+    }
+
     _renderSearch() {
         if (!this.state.search) {
             return null;
@@ -56,12 +75,28 @@ class LittleExcel extends React.Component {
                     return React.DOM.td({key: id,},
                         React.DOM.input({
                             type: "text",
-                            'data-id': id
+                            'data-id': id,
+                            className: "form-control",
                         }));
                 })
             }
             </tr>
         );
+    }
+
+    _toggleSearch() {
+        if (this.state.search) {
+            this.setState({
+               search: false,
+               data: this._preSearchData
+            });
+            this._preSearchData = null;
+        } else {
+            this.setState({
+                search: true
+            });
+            this._preSearchData = this.state.data;
+        }
     }
 
     _renderTable() {
@@ -70,6 +105,7 @@ class LittleExcel extends React.Component {
                 <TableHeader headers={this.props.headers}
                     callbackParent={(e, sortedAscending) => this._onSortChanged(e, sortedAscending)}
                 />
+                {this._renderSearch()}
                 <TableBody data={this.state.data} />
             </table>
         );
@@ -77,7 +113,7 @@ class LittleExcel extends React.Component {
 
     _renderToolbar() {
         return (
-            <button className="toolbar" onClick={this._renderSearch}>Wyszukaj</button>
+            <button className="toolbar" onClick={this._toggleSearch}>Wyszukaj</button>
         );
     }
 
