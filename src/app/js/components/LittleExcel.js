@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {isNumber} from "../math-utils";
+import TableHeader from "./table/TableHeader";
 
 /**
  * Komponent bezstanowy małego arkusza
@@ -21,7 +22,6 @@ class LittleExcel extends React.Component {
         };
 
         this.getCellClassName = this.getCellClassName.bind(this);
-        this.sort = this.sort.bind(this);
         this._showEditor = this._showEditor.bind(this);
         this._save = this._save.bind(this);
         this._renderSearch = this._renderSearch.bind(this);
@@ -29,22 +29,6 @@ class LittleExcel extends React.Component {
 
     getCellClassName(cell) {
         return isNumber(cell) ? "right-aligned" : "";
-    }
-
-    sort(e) {
-        let column = e.target.cellIndex;
-        let sortedAscending = this.state.sortedBy === column && !this.state.sortedAscending;
-        let data = Array.from(this.state.data);
-
-        data.sort(function (a, b) {
-            return sortedAscending ? a[column] > b[column] ? -1 : 1 : a[column] > b[column] ? 1 : -1;
-        });
-
-        this.setState({
-            data: data,
-            sortedBy: column,
-            sortedAscending: sortedAscending
-        });
     }
 
     _showEditor(e) {
@@ -78,6 +62,19 @@ class LittleExcel extends React.Component {
         // TODO
     }
 
+    onSortChanged(e, sortedAscending) {
+        let column = e.target.cellIndex;
+        let data = Array.from(this.state.data);
+
+        data.sort(function (a, b) {
+            return sortedAscending ? a[column] > b[column] ? -1 : 1 : a[column] > b[column] ? 1 : -1;
+        });
+
+        this.setState({
+            data: data
+        });
+    }
+
     _renderSearch() {
         if (!this.state.search) {
             return null;
@@ -102,18 +99,8 @@ class LittleExcel extends React.Component {
         let _this = this;
         return (
             <table className="table">
-                <thead onClick={_this.sort}>
-                <tr>
-                {
-                    this.props.headers.map(function (title, idx) {
-                        if (this.state.sortedBy === idx) {
-                            title += this.state.sortedAscending ? ' \u2193' : ' \u2191';
-                        }
-                        return <th key={idx}>{title}</th>;
-                    }, this)
-                }
-                </tr>
-                </thead>
+                <TableHeader headers={this.props.headers}
+                             callbackParent={(e, sortedAscending) => this.onSortChanged(e, sortedAscending)} />
                 <tbody onDoubleClick={_this._showEditor}>
                 {
                     this.state.data.map(function (row, rowId) {
