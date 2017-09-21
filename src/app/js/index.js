@@ -1,6 +1,6 @@
 import React from "react";
 import * as ReactDOM from "react-dom";
-import LittleExcel from "./components/LittleExcel";
+import LittleExcel from "./components/little-excel";
 
 const containerEl = document.getElementById("app");
 
@@ -21,16 +21,16 @@ const data = [
 
 class MainApp extends React.Component {
 
-    renderLitleExcel() {
+    renderLittleExcel() {
         return (
-            <LittleExcel headers={headers} initialData={data} />
+            <LittleExcel headers={headers} data={data} />
         );
     }
 
     render() {
         return (
             <div className="app">
-                {this.renderLitleExcel()}
+                {this.renderLittleExcel()}
             </div>
         )
     }
