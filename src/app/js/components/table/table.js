@@ -8,10 +8,11 @@ import TableBodyContainer from "./body/tableBodyContainer";
 
 const Table = props => {
     const {headers, data, sort, filter, onSort, onEdit, onFilterToggle, onFilterChange} = props;
+    const { title } = props;
 
     return (
         <div className="main-table-wrapper">
-            <h3>Najciekawsze bestsellery w 2010 r.</h3>
+            <h3>{title}</h3>
             <table className="table table-striped main-table">
                 <TableHeader
                     headers={headers}

@@ -5,11 +5,18 @@ import createStore from "redux/es/createStore";
 import tableReducer from "./reducers/tableReducer";
 import Table from "./components/table/table";
 
+const store1 = createStore(tableReducer);
 const store = createStore(tableReducer);
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Table />
-    </Provider>,
+    <div>
+        <Provider store={store}>
+            <Table title="Najciekawsze bestsellery w 2010 r."/>
+        </Provider>
+        <hr />
+        <Provider store={store1}>
+            <Table title="Najciekawsze bestsellery w 2011 r."/>
+        </Provider>
+    </div>,
     document.getElementById("app")
 );
