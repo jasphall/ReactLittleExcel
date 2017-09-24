@@ -7,7 +7,7 @@ const TableHeader = props => {
     };
 
     return (
-        <thead onClick={onClick}>
+        <thead onClick={onClick} className="main-table-head">
         <tr>
             {
                 headers.map(function (title, id) {

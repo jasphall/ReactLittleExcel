@@ -24,7 +24,7 @@ const TableFilters = props => {
     }
 
     return (
-        <table className="table">
+        <table className="table filters-table">
             <tbody>
             <tr onChange={onChange}>
                 {filters}

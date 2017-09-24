@@ -13,6 +13,38 @@ html, body {
     margin: 0 auto;
 }
 
-.right-aligned {
-    text-align: right;
+.main-table-wrapper {
+    margin-top: 20px;
+}
+
+.main-table-wrapper h3:first-child {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.main-table-head {
+    background-color: darkorange;
+}
+
+.main-table-head th {
+    color: #FFF;
+}
+
+.main-table {
+    border-left: 1px solid #dbdbdb;
+    border-right: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.main-table tbody tr:nth-of-type(odd) {
+    background-color: #ffe9d1 !important;
+}
+
+.main-table .form-control {
+    border: none;
+    margin: 0;
+}
+
+.filters-table td, .filters-table th {
+    border-top: none !important;
 }

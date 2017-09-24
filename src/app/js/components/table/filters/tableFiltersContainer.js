@@ -6,13 +6,17 @@ const TableFiltersContainer = props => {
 
     return (
         <div>
-            <hr />
-            <button type="button" className="btn btn-primary" onClick={onFilterToggle}>Filtruj</button>
             <TableFilters
+                className="main-table-filters"
                 columnsLength={columnsLength}
                 filtering={filtering}
                 onFilterChange={onFilterChange}
             />
+            <button
+                type="button"
+                className="btn btn-primary"
+                onClick={onFilterToggle}>Filtruj
+            </button>
         </div>
     );
 
