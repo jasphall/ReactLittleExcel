@@ -11,7 +11,7 @@ module.exports = {
     devtool: "source-map",
 
     // Punkt startowy aplikacji
-    entry: APP_DIR + '/index.js',
+    entry: APP_DIR + '/app.js',
 
     // Punkt wyjściowy aplikacji
     output: {
