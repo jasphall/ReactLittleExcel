@@ -5,95 +5,49 @@ import {
     SORT
 } from "../constants/actions";
 import {
-    TABLE_DATA,
-    TABLE_HEADERS
-} from "../constants/testData/tableTestData";
-import {
     filter,
     sort,
     switchValue
 } from "../components/tabel/utils/dataUtils";
+import tableInitialState from "../constants/initState";
 
-let initialState = {
-    headers: TABLE_HEADERS,
-    data: TABLE_DATA,
-    sort: {
-        ascending: false,
-        columnId: null,
-    },
-    filter: {
-        currentlyFiltering: false,
-        preFilteredData: null
-    }
-};
-
-export default (state = initialState, action) => {
+export default (state = tableInitialState, action) => {
     switch (action.type) {
         case SORT: {
-            return {
-                headers: state.headers,
-                sort: {
-                    ascending: !state.sort.ascending,
-                    columnId: action.columnId
-                },
-                data: sort(state.data, !state.sort.ascending, action.columnId),
-                filter: state.filter
-            }
+            return Object.assign({}, state, {
+                    sort: {
+                        ascending: !state.sort.ascending,
+                        columnId: action.columnId
+                    },
+                    data: sort(state.data, !state.sort.ascending, action.columnId),
+                }
+            )
         }
-
         case EDIT: {
-            return {
-                headers: state.headers,
+            return Object.assign({}, state, {
                 sort: {
                     ascending: !state.sort.ascending,
                     columnId: action.columnId
                 },
                 data: switchValue(state.data, action.input, action.edit.row, action.edit.cell),
-                filter: state.filter
-            }
+            })
         }
-
         case FILTER_TOGGLED: {
-            let newState = {
-                headers: state.headers,
-                sort: state.sort,
-            };
+            let data = state.filter.currentlyFiltering ? state.filter.preFilteredData : state.data;
+            let filter = state.filter.currentlyFiltering ?
+                { currentlyFiltering: false, preFilteredData: null } :
+                { currentlyFiltering: true, preFilteredData: state.data };
 
-            if (state.filter.currentlyFiltering) {
-                newState.data = state.filter.preFilteredData;
-                newState.filter = {
-                    currentlyFiltering: false,
-                    preFilteredData: null
-                }
-            } else {
-                newState.data = state.data;
-                newState.filter = {
-                    currentlyFiltering: true,
-                    preFilteredData: state.data
-                }
-            }
-
-            return newState;
+            return Object.assign({}, state, {
+                data: data,
+                filter: filter
+            })
         }
-
         case FILTER_CHANGED: {
-            let currentData = state.data;
-
-            if (!action.filterText) {
-                currentData = filter.preFilteredData;
-            }
-
-            return {
-                headers: state.headers,
-                sort: state.sort,
-                data: filter(state.filter.preFilteredData, action.columnId, action.filterText),
-                filter: {
-                    currentlyFiltering: state.filter.currentlyFiltering,
-                    preFilteredData: state.filter.preFilteredData
-                }
-            }
+            return Object.assign({}, state, {
+                data: filter(state.filter.preFilteredData, action.columnId, action.filterText)
+            });
         }
-
         default:
             return state;
     }

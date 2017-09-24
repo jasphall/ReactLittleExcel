@@ -16,6 +16,6 @@ const TableFiltersContainer = props => {
         </div>
     );
 
-}
+};
 
 export default TableFiltersContainer;
