@@ -8,7 +8,7 @@ import {
     filter,
     sort,
     switchValue
-} from "../components/tabel/utils/dataUtils";
+} from "../components/table/utils/dataUtils";
 import tableInitialState from "../constants/initState";
 
 export default (state = tableInitialState, action) => {
