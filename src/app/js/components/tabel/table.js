@@ -2,27 +2,35 @@ import * as React from "react";
 import PropTypes from 'prop-types'
 import connect from "react-redux/es/connect/connect";
 import TableHeader from "./header/tableHeader";
-import TableBody from "./body/tableBody";
 import {EDIT, FILTER_CHANGED, FILTER_TOGGLED, SORT} from "../../constants/actions";
 import TableFiltersContainer from "./filters/tableFiltersContainer";
+import TableBodyContainer from "./body/tableBodyContainer";
 
-class Table extends React.Component {
+const Table = props => {
+    const {headers, data, sort, filter, onSort, onEdit, onFilterToggle, onFilterChange} = props;
 
-    render() {
-        const {headers, data, sort, filter, onSort, onEdit, onFilterToggle, onFilterChange} = this.props;
-
-        return (
-            <div>
-                <table className="table">
-                    <TableHeader headers={headers} sort={sort} onSort={onSort} />
-                    <TableBody data={data} onEdit={onEdit} />
-                </table>
-                <TableFiltersContainer columnsLength={headers.length} filtering={filter.currentlyFiltering} onFilterToggle={onFilterToggle} onFilterChange={onFilterChange} />
-            </div>
-        );
-    }
-
-}
+    return (
+        <div>
+            <table className="table">
+                <TableHeader
+                    headers={headers}
+                    sort={sort}
+                    onSort={onSort}
+                />
+                <TableBodyContainer
+                    data={data}
+                    onEdit={onEdit}
+                />
+            </table>
+            <TableFiltersContainer
+                columnsLength={headers.length}
+                filtering={filter.currentlyFiltering}
+                onFilterToggle={onFilterToggle}
+                onFilterChange={onFilterChange}
+            />
+        </div>
+    );
+};
 
 const mapStateToProps = (state) => {
     return {
@@ -53,12 +61,6 @@ const mapDispatchToProps = (dispatch) => {
             filterText: filterText
         })
     }
-};
-
-Table.propTypes= {
-    headers: PropTypes.array,
-    data: PropTypes.array,
-    sort: PropTypes.object
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Table);

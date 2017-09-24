@@ -1,6 +1,18 @@
-import {EDIT, FILTER_CHANGED, FILTER_TOGGLED, SORT} from "../constants/actions";
-import {TABLE_DATA, TABLE_HEADERS} from "../constants/testData/tableTestData";
-import {filter, sort, switchValue} from "../components/tabel/utils/dataUtils";
+import {
+    EDIT,
+    FILTER_CHANGED,
+    FILTER_TOGGLED,
+    SORT
+} from "../constants/actions";
+import {
+    TABLE_DATA,
+    TABLE_HEADERS
+} from "../constants/testData/tableTestData";
+import {
+    filter,
+    sort,
+    switchValue
+} from "../components/tabel/utils/dataUtils";
 
 let initialState = {
     headers: TABLE_HEADERS,

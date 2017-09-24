@@ -1,37 +1,37 @@
 import * as React from "react";
 
-class TableFilters extends React.Component {
+const TableFilters = props => {
+    const { columnsLength, filtering, onFilterChange } = props;
 
-    render() {
-        const { columnsLength, filtering, onFilterChange } = this.props;
+    const onChange = ev => {
+        onFilterChange(ev.target.dataset.id, ev.target.value);
+    };
 
-        if (!filtering) {
-            return null;
-        }
-
-        let inputs = [];
-        for (let i=0; i<columnsLength; i++) {
-            inputs.push(
-                React.DOM.td({key: i},
-                    React.DOM.input({
-                        type: "text",
-                        'data-id': i,
-                        className: "form-control",
-                    }))
-            )
-        }
-
-        return (
-            <table className="table">
-                <tbody>
-                <tr onChange={(e) => onFilterChange(e.target.dataset.id, e.target.value)}>
-                    {inputs}
-                </tr>
-                </tbody>
-            </table>
-        );
+    if (!filtering) {
+        return null;
     }
 
+    let filters = [];
+    for (let i=0; i<columnsLength; i++) {
+        filters.push(
+            React.DOM.td({key: i},
+                React.DOM.input({
+                    type: "text",
+                    'data-id': i,
+                    className: "form-control",
+                }))
+        )
+    }
+
+    return (
+        <table className="table">
+            <tbody>
+            <tr onChange={onChange}>
+                {filters}
+            </tr>
+            </tbody>
+        </table>
+    );
 }
 
 export default TableFilters;

@@ -1,79 +1,48 @@
 import * as React from "react";
 
-class TableBody extends React.Component {
+const TableBody = props => {
+    const { edit, onChangeLastEditedCell, onCellEdit } = props;
 
-    constructor(props) {
-        super(props);
+    const onDoubleClick = ev => {
+        onChangeLastEditedCell(ev);
+    };
 
-        this.state = {
-            edit: null
-        };
+    const onInputSubmit = ev => {
+        ev.preventDefault();
+        onCellEdit(ev);
+    };
 
-        this.changeLastEditedCell = this.changeLastEditedCell.bind(this);
-        this._onEdit = this._onEdit.bind(this);
-    }
+    return (
+        <tbody onDoubleClick={onDoubleClick}>
+        {
+            props.data.map(function (row, rowId) {
+                return (
+                    <tr key={rowId}>
+                        {
+                            row.map(function (cell, cellId) {
+                                if (edit && edit.row === rowId && edit.cell === cellId) {
+                                    cell = React.DOM.form({
+                                        onSubmit: onInputSubmit
+                                    }, React.DOM.input({
+                                        type: "text",
+                                        className: "form-control",
+                                        defaultValue: cell
+                                    }));
+                                }
 
-    changeLastEditedCell(e) {
-        let row = e.target.dataset.row;
-        let cell = e.target.cellIndex;
+                                return React.DOM.td({
+                                    key: cellId,
+                                    'data-row': rowId,
+                                }, cell);
+                            })
+                        }
+                    </tr>
+                );
+            })
+        }
+        </tbody>
+    );
 
-        this.setState({
-            edit: {
-                row: parseInt(row, 10),
-                cell: cell
-            }
-        });
-    }
-
-    _onEdit(e) {
-        const { onEdit } = this.props;
-        e.preventDefault();
-
-        let input = e.target.firstChild.value;
-
-        onEdit(input, this.state.edit);
-
-        this.setState({
-            edit: null
-        });
-    }
-
-    render() {
-        let currentEdit = this.state.edit;
-        let _this = this;
-
-        return (
-            <tbody onDoubleClick={this.changeLastEditedCell}>
-            {
-                this.props.data.map(function (row, rowId) {
-                    return (
-                        <tr key={rowId}>
-                            {
-                                row.map(function (cell, cellId) {
-                                    if (currentEdit && currentEdit.row === rowId && currentEdit.cell === cellId) {
-                                        cell = React.DOM.form({
-                                            onSubmit: _this._onEdit
-                                        }, React.DOM.input({
-                                            type: "text",
-                                            className: "form-control",
-                                            defaultValue: cell
-                                        }));
-                                    }
-
-                                    return React.DOM.td({
-                                        key: cellId,
-                                        'data-row': rowId,
-                                    }, cell);
-                                })
-                            }
-                        </tr>
-                    );
-                })
-            }
-            </tbody>
-        );
-    }
-
-}
+};
 
 export default TableBody;
